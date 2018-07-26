@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Project Etch-a-Sketch</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <button>Reset</button>
+  <script>
+  const body = document.querySelector('body');
+  const containerDiv = document.createElement('div');
+
+  let attributeText = "display: grid; grid-template-columns: ";
+  attributeText += "60px ".repeat(16);
+  attributeText += "; grid-template-rows: ";
+  attributeText += "60px ".repeat(16);
+  attributeText += "; border: 1px solid black;";
+  attributeText += "width: 960px;";
+
+  containerDiv.setAttribute("style",attributeText);
+
+
+  body.appendChild(containerDiv);
+
+  //make an array to hold the variables
+  let itemDivs = [];
+
+  for (let i = 0; i < 16*16; i++) {
+    itemDivs[i] = document.createElement('div');
+    itemDivs[i].setAttribute('id',`item-${i}`);
+    containerDiv.appendChild(itemDivs[i]);
+
+    itemDivs[i].addEventListener("mouseover",(e) => {
+      e.currentTarget.classList.add('active');
+    });
+  }
+
+  function getNumber() {
+    let num = prompt("How many squares per side, would you like on your new grid?","16");
+    num = Number(num);
+    if (!isNaN(num)) {
+      num = Math.floor(num);
+      return num;
+    } else {
+      return "ERROR";
+    }
+  }
+
+  function remakeGrid(num) {
+    //remove all itemDivs
+    for (let i = 0; i < itemDivs.length; i++) {
+      containerDiv.removeChild(itemDivs[i]);
+    }
+    //set the attributes for the containerDiv
+    let pix = 960 / num;
+    attributeText = "display: grid; grid-template-columns: ";
+    attributeText += `${pix}px `.repeat(num);
+    attributeText += "; grid-template-rows: ";
+    attributeText += `${pix}px `.repeat(num);
+    attributeText += "; border: 1px solid black;";
+    attributeText += "width: 960px;";
+    containerDiv.setAttribute('style',attributeText);
+    //run through loop adding event listeners
+    itemDivs = [];
+    for (let i = 0; i < num*num; i++) {
+      itemDivs[i] = document.createElement('div');
+      itemDivs[i].setAttribute('id',`item-${i}`);
+      containerDiv.appendChild(itemDivs[i]);
+
+      itemDivs[i].addEventListener("mouseover",(e) => {
+        e.currentTarget.classList.add('active');
+      });
+    }
+  }
+
+  const btn = document.querySelector('button');
+  btn.addEventListener("click",(itemDivs) => {
+    for (let i = 0; i < itemDivs.length * itemDivs.length; i++) {
+      itemDivs[i].classList.remove('active');
+    }
+    let num = getNumber();
+    if (num != "ERROR") {
+      //call the function to remake the Grid
+      remakeGrid(num);
+      return;
+    }
+    return;
+  })
+  </script>
+</body>
